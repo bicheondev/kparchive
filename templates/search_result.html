@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {{ title }}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta property="og:description" content="본 사이트는 북한 정부 또는 조선노동당과는 전혀 관계가 없으며, 이들을 지지하지도 옹호하지도 않고 오로지 학문적인 목적으로 개설되었음을 알려드립니다. 본 사전에 포함된 정의와 용례에는 편향적이고 거짓된 내용이 담겨 있을 수 있습니다."/>
+    <meta property="og:image" content="{{ url_for('static', filename='images/kpdic-social.png') }}"/>
+</head>
+<body class="search">
+    <div class="content-wrapper">
+        <header>
+            <div id="left">
+                <a id="logoLink" href="/{{ base }}">
+                    {% if base == 'KK' %}
+                        <img src="{{ url_for('static', filename='images/logo_kk_alt.svg') }}" alt="Logo" class="logo-header logo-kk-alt">
+                    {% elif base == 'biyak' %}
+                        <img src="{{ url_for('static', filename='images/logo_biyak_alt.svg') }}" alt="Logo" class="logo-header logo-biyak-alt">
+                    {% elif base == 'KEEK' %}
+                        <img src="{{ url_for('static', filename='images/logo_keek_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% elif base == 'KCCK' %}
+                        <img src="{{ url_for('static', filename='images/logo_kcck_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% elif base == 'KFFK' %}
+                        <img src="{{ url_for('static', filename='images/logo_kffk_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% elif base == 'KJJK' %}
+                        <img src="{{ url_for('static', filename='images/logo_kjjk_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% elif base == 'KDDK' %}
+                        <img src="{{ url_for('static', filename='images/logo_kddk_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% elif base == 'KRRK' %}
+                        <img src="{{ url_for('static', filename='images/logo_krrk_alt.svg') }}" alt="Logo" class="logo-header logo-keek-alt">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/logo_kk_alt.svg') }}" alt="Logo" class="logo-header logo-kk-alt">
+                    {% endif %}
+                </a>                 
+                <form id="searchForm" action="/{{ base }}/searchResult.do" method="GET" onsubmit="return submitForm(event);">
+                    <input type="text" id="searchInput" name="search" style="font-size: 15px" value="{{ search }}">
+                    <button type="submit">찾기</button>
+                    
+                    <!-- Autocomplete container -->
+                    <div id="autocomplete-container" class="search-result"></div>
+                </form>              
+            </div>
+            <div id="right">
+                <text style="font-size: 16px; color: #1B3148;">
+                    <a id="helpLink" href="/KK/help" style="color: #1B3148; text-decoration: none;">도움말</a>
+                </text>
+                <div id="v-line" style="background-color: #9EAAB6"></div>
+                <a id="settingsLink" href="#" style="color: #1B3148; text-decoration: none;">설정</a>
+            </div>
+        </header>             
+        <main>
+            {% if results %}
+                {% for entry in results %}
+                    <div class="entry">
+                        <span class="word">{{ entry['word'] }}</span>
+                        <p style="line-height: 25px; word-break: keep-all; margin-top: 6px; margin-bottom: 30px;">
+                            {% set definition_lines = entry['definition'].split('\n') %}
+                            <span style="color: #3082d6">{{ definition_lines[0].split('[')[0] }}</span>
+                            {% if '[' in definition_lines[0] %}
+                                <span style="font-size: 15px; color: #666666">[{{ definition_lines[0].split('[')[1] }}</span>
+                            {% endif %}
+                            {% for line in definition_lines[1:] %}
+                                <br>{{ line.replace('⊗', '<span style="color: red">⊗</span>').replace('①', '<span style="color: red">①</span>').replace('②', '<span style="color: red">②</span>').replace('③', '<span style="color: red">③</span>').replace('④', '<span style="color: red">④</span>').replace('⑤', '<span style="color: red">⑤</span>').replace('⑥', '<span style="color: red">⑥</span>').replace('⑦', '<span style="color: red">⑦</span>').replace('⑧', '<span style="color: red">⑧</span>').replace('⑨', '<span style="color: red">⑨</span>').replace('⑩', '<span style="color: red">⑩</span>').replace('⑪', '<span style="color: red">⑪</span>').replace('⑫', '<span style="color: red">⑫</span>').replace('⑬', '<span style="color: red">⑬</span>').replace('⑭', '<span style="color: red">⑭</span>').replace('⑮', '<span style="color: red">⑮</span>').replace('⑯', '<span style="color: red">⑯</span>').replace('⑰', '<span style="color: red">⑰</span>') | safe }}
+                            {% endfor %}
+                        </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </main>
+        {% include 'footer.html' %}
+    </div>
+
+    {% include 'settings_popup.html' %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoLink = document.getElementById('logoLink');
+            const currentPath = window.location.pathname;
+
+            // Determine the correct base URL based on the current path
+            let baseUrl;
+            if (currentPath.startsWith('/KK')) {
+                baseUrl = '/KK';
+            } else if (currentPath.startsWith('/biyak')) {
+                baseUrl = '/biyak';
+            } else if (currentPath.startsWith('/KEEK')) {
+                baseUrl = '/KEEK';
+            } else if (currentPath.startsWith('/KCCK')) {
+                baseUrl = '/KCCK';
+            } else if (currentPath.startsWith('/KFFK')) {
+                baseUrl = '/KFFK';
+            } else if (currentPath.startsWith('/KJJK')) {
+                baseUrl = '/KJJK';
+            } else if (currentPath.startsWith('/KDDK')) {
+                baseUrl = '/KDDK';
+            } else if (currentPath.startsWith('/KRRK')) {
+                baseUrl = '/KRRK';
+            } else {
+                baseUrl = '/KK'; // Default fallback
+            }
+
+            // Set the href for the logo link
+            logoLink.href = baseUrl;
+        });
+    </script>
+</body>
+</html>

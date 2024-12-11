@@ -1,0 +1,59 @@
+<!-- header.html -->
+<header>
+    <div id="left">
+        <b class="kpdic_title">
+            <text style="font-size: 16px">북한사전아카이브</text>
+        </b>
+        <div id="circle"></div>
+        <a id="dictionaryLink" href="
+            {% if base == 'KK' %}
+                {{ url_for('kk_main') }}
+            {% elif base == 'biyak' %}
+                {{ url_for('biyak_main') }}
+            {% elif base == 'KEEK' %}
+                {{ url_for('keek_main') }}
+            {% elif base == 'KCCK' %}
+                {{ url_for('kcck_main') }}
+            {% elif base == 'KFFK' %}
+                {{ url_for('kffk_main') }}
+            {% elif base == 'KJJK' %}
+                {{ url_for('kjjk_main') }}
+            {% elif base == 'KDDK' %}
+                {{ url_for('kddk_main') }}
+            {% elif base == 'KRRK' %}
+                {{ url_for('krrk_main') }}
+            {% else %}
+                {{ url_for('kk_main') }}
+            {% endif %}
+        " style="color: white; text-decoration: none;">
+            <text id="dictionaryTitle" style="font-size: 16px">
+                {% if base == 'KK' %}
+                    조선말대사전
+                {% elif base == 'biyak' %}
+                    비약과학기술용어사전
+                {% elif base == 'KEEK' %}
+                    영조사전
+                {% elif base == 'KCCK' %}
+                    중조사전
+                {% elif base == 'KFFK' %}
+                    불조사전
+                {% elif base == 'KJJK' %}
+                    일조사전
+                {% elif base == 'KDDK' %}
+                    독조사전
+                {% elif base == 'KRRK' %}
+                    로조사전
+                {% else %}
+                    조선말대사전 <!-- Fallback title -->
+                {% endif %}
+            </text>
+        </a>
+    </div>
+    <div id="right">
+        <text style="font-size: 16px;">
+            <a id="helpLink" href="/{{ base }}/help" style="color: white; text-decoration: none;">도움말</a>
+        </text>
+        <div id="v-line" style="display: inline-block;"></div>
+        <a id="settingsLink" href="#" style="color: white; text-decoration: none;">설정</a>
+    </div>
+</header>
